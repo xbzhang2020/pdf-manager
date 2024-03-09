@@ -1,10 +1,13 @@
-(() => {
-  const { PDFDocument } = PDFLib;
-  let mergedPdfDoc = null;
+import { useRef } from "react";
+import { PDFDocument } from "pdf-lib";
+
+let mergedPdfDoc = null;
+
+function Merger() {
+  const fileRef = useRef(null);
 
   async function merge() {
-    const fileList = document.getElementById("file");
-    const files = fileList.files;
+    const files = fileRef.current.files;
     mergedPdfDoc = await PDFDocument.create();
 
     for await (const file of files) {
@@ -59,9 +62,19 @@
     link.click();
   }
 
-  const previewBtn = document.getElementById("preview-btn");
-  previewBtn.addEventListener("click", preview);
+  return (
+    <div>
+      <h2>合并 PDF</h2>
+      <input ref={fileRef} type="file" id="file" multiple accept=".pdf" />
 
-  const downloadBtn = document.getElementById("download-btn");
-  downloadBtn.addEventListener("click", download);
-})();
+      <button id="preview-btn" onClick={preview}>
+        预览
+      </button>
+      <button id="download-btn" onClick={download}>
+        下载
+      </button>
+    </div>
+  );
+}
+
+export default Merger;
