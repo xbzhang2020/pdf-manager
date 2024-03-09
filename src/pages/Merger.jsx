@@ -64,7 +64,6 @@ function Merger() {
 
   return (
     <div>
-      <h2>合并 PDF</h2>
       <input ref={fileRef} type="file" id="file" multiple accept=".pdf" />
 
       <button id="preview-btn" onClick={preview}>
