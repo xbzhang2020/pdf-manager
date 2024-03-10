@@ -14,12 +14,15 @@
   }
 
   async function merge() {
-    if (!files) return;
-    mergedPdfDoc = await PDFDocument.create();
-    for await (const file of files) {
+    if (!files) {
+      alert("请先添加待合并文件");
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
       const data = await new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(files[i]);
         reader.onload = () => {
           resolve(reader.result);
         };
@@ -29,18 +32,24 @@
       });
 
       const pdfDoc = await PDFDocument.load(data);
-      const copiedPages = await mergedPdfDoc.copyPages(
-        pdfDoc,
-        pdfDoc.getPageIndices()
-      );
-      copiedPages.forEach((item) => {
-        mergedPdfDoc.addPage(item);
-      });
+      if (i === 0) {
+        // 在第一个 pdf 文件基础上添加其他文件，防止目录等元信息丢失
+        mergedPdfDoc = pdfDoc;
+      } else {
+        const copiedPages = await mergedPdfDoc.copyPages(
+          pdfDoc,
+          pdfDoc.getPageIndices()
+        );
+        copiedPages.forEach((item) => {
+          mergedPdfDoc.addPage(item);
+        });
+      }
     }
   }
 
   async function getMergedDocURL() {
     if (!mergedPdfDoc) return null;
+
     const pdfBytes = await mergedPdfDoc.save();
     const pdbBlob = new Blob([pdfBytes], {
       type: "application/pdf",
@@ -54,6 +63,8 @@
       await merge();
     }
     const url = await getMergedDocURL();
+    if (!url) return;
+
     window.open(url);
   }
 
@@ -61,9 +72,12 @@
     if (!mergedPdfDoc) {
       await merge();
     }
+    const url = await getMergedDocURL();
+    if (!url) return;
+
     const link = document.createElement("a");
     link.download = mergerForm.elements["name"].value || "merged.pdf";
-    link.href = await getMergedDocURL();
+    link.href = url;
     link.click();
   }
 
