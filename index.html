@@ -10,26 +10,24 @@
   </head>
   <body>
     <div id="root">
-      <div>
-        <h2>合并 PDF</h2>
-        <form action="" class="merger-form" id="mergerForm">
-          <div class="merger-form-item">
-            <label for="file">合并文件： </label>
-            <input type="file" name="file" multiple accept=".pdf" />
+      <h2>合并 PDF</h2>
+      <form action="" class="merger-form" id="mergerForm">
+        <div class="merger-form-item">
+          <label for="file">待合并文件： </label>
+          <input type="file" name="file" multiple accept=".pdf" />
+        </div>
+        <div class="merger-form-item">
+          <label for="name">合并后名称：</label>
+          <input type="text" name="name" id="name" />
+        </div>
+        <div class="merger-form-item">
+          <label for=""></label>
+          <div>
+            <button id="previewBtn">预览</button>
+            <button id="downloadBtn">下载</button>
           </div>
-          <div class="merger-form-item">
-            <label for="name">合并名称：</label>
-            <input type="text" name="name" id="name" />
-          </div>
-          <div class="merger-form-item">
-            <label for=""></label>
-            <div>
-              <button id="previewBtn">预览</button>
-              <button id="downloadBtn">下载</button>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
     <script src="./src/merge.js"></script>
   </body>
