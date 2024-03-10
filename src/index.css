@@ -1,0 +1,18 @@
+.merger-form {
+  display: table;
+}
+
+.merger-form-item {
+  display: table-row;
+}
+
+.merger-form-item label,
+.merger-form-item input {
+  display: table-cell;
+  margin-bottom: 8px;
+}
+
+.merger-form-item label {
+  margin-right: 8px;
+  text-align: right;
+}

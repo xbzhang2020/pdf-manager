@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./src/index.css" rel="stylesheet" />
     <script src="https://unpkg.com/pdf-lib"></script>
     <title>PDF 管理器</title>
   </head>
@@ -11,10 +12,23 @@
     <div id="root">
       <div>
         <h2>合并 PDF</h2>
-        <input type="file" name="" id="file" multiple accept=".pdf" />
-        
-        <button id="preview-btn">预览</button>
-        <button id="download-btn">下载</button>
+        <form action="" class="merger-form" id="mergerForm">
+          <div class="merger-form-item">
+            <label for="file">合并文件： </label>
+            <input type="file" name="file" multiple accept=".pdf" />
+          </div>
+          <div class="merger-form-item">
+            <label for="name">合并名称：</label>
+            <input type="text" name="name" id="name" />
+          </div>
+          <div class="merger-form-item">
+            <label for=""></label>
+            <div>
+              <button id="previewBtn">预览</button>
+              <button id="downloadBtn">下载</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
     <script src="./src/merge.js"></script>

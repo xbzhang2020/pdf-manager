@@ -2,17 +2,29 @@
   const { PDFDocument } = PDFLib;
   let mergedPdfDoc = null;
 
-  async function merge() {
-    const fileList = document.getElementById("file");
-    const files = fileList.files;
-    mergedPdfDoc = await PDFDocument.create();
+  const mergerForm = document.getElementById("mergerForm");
+  let files = null;
 
+  function handleFiles(event) {
+    files = event.target.files;
+    const firstFileName = files[0]?.name;
+    if (firstFileName) {
+      mergerForm.elements["name"].value = firstFileName;
+    }
+  }
+
+  async function merge() {
+    if (!files) return;
+    mergedPdfDoc = await PDFDocument.create();
     for await (const file of files) {
       const data = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsArrayBuffer(file);
-        reader.onload = async () => {
+        reader.onload = () => {
           resolve(reader.result);
+        };
+        reader.onerror = () => {
+          reject();
         };
       });
 
@@ -27,7 +39,7 @@
     }
   }
 
-  async function getMergedPDFDocURL() {
+  async function getMergedDocURL() {
     if (!mergedPdfDoc) return null;
     const pdfBytes = await mergedPdfDoc.save();
     const pdbBlob = new Blob([pdfBytes], {
@@ -41,9 +53,7 @@
     if (!mergedPdfDoc) {
       await merge();
     }
-
-    const url = await getMergedPDFDocURL();
-    // document.getElementById("pdf").src = url;
+    const url = await getMergedDocURL();
     window.open(url);
   }
 
@@ -51,17 +61,21 @@
     if (!mergedPdfDoc) {
       await merge();
     }
-    const url = await getMergedPDFDocURL();
-
     const link = document.createElement("a");
-    link.download = "merged.pdf";
-    link.href = url;
+    link.download = mergerForm.elements["name"].value || "merged.pdf";
+    link.href = await getMergedDocURL();
     link.click();
   }
 
-  const previewBtn = document.getElementById("preview-btn");
-  previewBtn.addEventListener("click", preview);
-
-  const downloadBtn = document.getElementById("download-btn");
-  downloadBtn.addEventListener("click", download);
+  mergerForm.elements["file"].addEventListener("change", handleFiles);
+  document.getElementById("previewBtn").addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    preview();
+  });
+  document.getElementById("downloadBtn").addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    download();
+  });
 })();
